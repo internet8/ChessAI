@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Chess</title>
+<meta charset="ISO-8859-1">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.js"></script>
+<script src="chess.js"></script>
+<script src="minimax.js"></script>
+<script src="chess.min.js"></script>
+<style>
+* {
+	font-family: Arial;
+	font-weight: bold;
+	text-align: center;
+	color: white;
+}
+body {
+	background-image: url("chessBG.jpeg");
+	background-repeat: no-repeat;
+	background-size: 100vw 100vh;
+}
+table {
+	border-collapse: collapse;
+    border: 5px solid black;
+	table-layout: fixed;
+	margin-left: auto;
+	margin-right: auto;
+}
+td:not(.coordinates) {
+    border: 1px solid black;
+	border-collapse: collapse;
+	width: 75px;
+	height: 75px;
+}
+
+/* if it's stupid and it works it's not stupid */
+table tr:nth-child(odd) td:nth-child(even):not(.coordinates) img  {
+  background: #A9A9A9;
+}
+table tr:nth-child(even) td:nth-child(odd):not(.coordinates) img {
+  background: #A9A9A9;
+}
+table tr:nth-child(odd) td:nth-child(odd):not(.coordinates) img {
+  background: white;
+}
+table tr:nth-child(even) td:nth-child(even):not(.coordinates) img {
+  background: white;
+}
+
+table tr:nth-child(odd) td:nth-child(even):not(.coordinates)  {
+  background: #A9A9A9;
+}
+table tr:nth-child(even) td:nth-child(odd):not(.coordinates) {
+  background: #A9A9A9;
+}
+table tr:nth-child(odd) td:nth-child(odd):not(.coordinates) {
+  background: white;
+}
+table tr:nth-child(even) td:nth-child(even):not(.coordinates) {
+  background: white;
+}
+
+td.coordinates {
+	color: black;
+	text-align: center;
+	height: 20px;
+	width: 20px;
+	background: #ffff;
+}
+</style>
+</head>
+<body>
+<h1>CHESS</h1>
+<p>With minimax algorithm</p>
+<table style="cursor: pointer;">
+<tr class="coordinates">
+	<td class="coordinates"></td>
+    <td class="coordinates">a</td>
+    <td class="coordinates">b</td>
+    <td class="coordinates">c</td>
+	<td class="coordinates">d</td>
+	<td class="coordinates">e</td>
+	<td class="coordinates">f</td>
+	<td class="coordinates">g</td>
+	<td class="coordinates">h</td>
+	<td class="coordinates"></td>
+  </tr>
+  <tr>
+	<td class="coordinates">8</td>
+    <td id="0" class="a8"></td>
+    <td id="1" class="b8"></td>
+    <td id="2" class="c8"></td>
+	<td id="3" class="d8"></td>
+	<td id="4" class="e8"></td>
+	<td id="5" class="f8"><img src="pieces/BlackKing.png" height="70px" width="70px" alt="piece"></td>
+	<td id="6" class="g8"></td>
+	<td id="7" class="h8"><img src="pieces/BlackRook.png" height="70px" width="70px" alt="piece"></td>
+	<td class="coordinates">8</td>
+  </tr>
+  <tr>
+	<td class="coordinates">7</td>
+    <td id="8" class="a7"></td>
+    <td id="9" class="b7"></td>
+    <td id="10" class="c7"><img src="pieces/BlackRook.png" height="70px" width="70px" alt="piece"></td>
+	<td id="11" class="d7"></td>
+	<td id="12" class="e7"><img src="pieces/BlackPawn.png" height="70px" width="70px" alt="piece"></td>
+	<td id="13" class="f7"></td>
+	<td id="14" class="g7"></td>
+	<td id="15" class="h7"></td>
+	<td class="coordinates">7</td>
+  </tr>
+  <tr>
+	<td class="coordinates">6</td>
+    <td id="16" class="a6"><img src="pieces/BlackPawn.png" height="70px" width="70px" alt="piece"></td>
+    <td id="17" class="b6"></td>
+    <td id="18" class="c6"></td>
+	<td id="19" class="d6"></td>
+	<td id="20" class="e6"><img src="pieces/WhiteRook.png" height="70px" width="70px" alt="piece"></td>
+	<td id="21" class="f6"><img src="pieces/BlackPawn.png" height="70px" width="70px" alt="piece"></td>
+	<td id="22" class="g6"></td>
+	<td id="23" class="h6"></td>
+	<td class="coordinates">6</td>
+  </tr>
+  <tr>
+	<td class="coordinates">5</td>
+    <td id="24" class="a5"></td>
+    <td id="25" class="b5"><img src="pieces/BlackBishop.png" height="70px" width="70px" alt="piece"></td>
+    <td id="26" class="c5"><img src="pieces/BlackPawn.png" height="70px" width="70px" alt="piece"></td>
+	<td id="27" class="d5"></td>
+	<td id="28" class="e5"></td>
+	<td id="29" class="f5"></td>
+	<td id="30" class="g5"></td>
+	<td id="31" class="h5"><img src="pieces/WhitePawn.png" height="70px" width="70px" alt="piece"></td>
+	<td class="coordinates">5</td>
+  </tr>
+  <tr>
+	<td class="coordinates">4</td>
+    <td id="32" class="a4"></td>
+    <td id="33" class="b4"></td>
+    <td id="34" class="c4"></td>
+	<td id="35" class="d4"></td>
+	<td id="36" class="e4"></td>
+	<td id="37" class="f4"></td>
+	<td id="38" class="g4"><img src="pieces/WhitePawn.png" height="70px" width="70px" alt="piece"></td>
+	<td id="39" class="h4"></td>
+	<td class="coordinates">4</td>
+  </tr>
+  <tr>
+	<td class="coordinates">3</td>
+    <td id="40" class="a3"></td>
+    <td id="41" class="b3"></td>
+    <td id="42" class="c3"><img src="pieces/WhitePawn.png" height="70px" width="70px" alt="piece"></td>
+	<td id="43" class="d3"></td>
+	<td id="44" class="e3"></td>
+	<td id="45" class="f3"><img src="pieces/WhitePawn.png" height="70px" width="70px" alt="piece"></td>
+	<td id="46" class="g3"></td>
+	<td id="47" class="h3"></td>
+	<td class="coordinates">3</td>
+  </tr>
+  <tr>
+	<td class="coordinates">2</td>
+    <td id="48" class="a2"><img src="pieces/WhitePawn.png" height="70px" width="70px" alt="piece"></td>
+    <td id="49" class="b2"></td>
+    <td id="50" class="c2"></td>
+	<td id="51" class="d2"></td>
+	<td id="52" class="e2"></td>
+	<td id="53" class="f2"><img src="pieces/WhiteKing.png" height="70px" width="70px" alt="piece"></td>
+	<td id="54" class="g2"></td>
+	<td id="55" class="h2"></td>
+	<td class="coordinates">2</td>
+  </tr>
+  <tr>
+	<td class="coordinates">1</td>
+    <td id="56" class="a1"></td>
+    <td id="57" class="b1"></td>
+    <td id="58" class="c1"></td>
+	<td id="59" class="d1"></td>
+	<td id="60" class="e1"><img src="pieces/WhiteRook.png" height="70px" width="70px" alt="piece"></td>
+	<td id="61" class="f1"></td>
+	<td id="62" class="g1"></td>
+	<td id="63" class="h1"></td>
+	<td class="coordinates">1</td>
+  </tr>
+  <tr class="coordinates">
+	<td class="coordinates"></td>
+    <td class="coordinates">a</td>
+    <td class="coordinates">b</td>
+    <td class="coordinates">c</td>
+	<td class="coordinates">d</td>
+	<td class="coordinates">e</td>
+	<td class="coordinates">f</td>
+	<td class="coordinates">g</td>
+	<td class="coordinates">h</td>
+	<td class="coordinates"></td>
+  </tr>
+</table>
+<p id="lastMoveId">Last move: </p>
+</body>
+</html>
